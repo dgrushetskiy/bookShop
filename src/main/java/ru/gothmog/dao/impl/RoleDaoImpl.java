@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.gothmog.dao.RoleDao;
 import ru.gothmog.model.security.Role;
 
-public class RoleDaoImpl extends BasicDaoImpl<Role> implements RoleDao{
+public class RoleDaoImpl extends BasicDaoImpl<Role> implements RoleDao {
 
     private final Logger logger = LoggerFactory.getLogger(RoleDaoImpl.class);
 
@@ -19,7 +19,7 @@ public class RoleDaoImpl extends BasicDaoImpl<Role> implements RoleDao{
                 .createQuery("FROM Role WHERE name = :name")
                 .setParameter("name", name)
                 .uniqueResult();
-        if (role == null){
+        if (role == null) {
             logger.info("Role with name {} not exist", name);
         } else {
             logger.info("Role with name {} was extracted successfully. {}",

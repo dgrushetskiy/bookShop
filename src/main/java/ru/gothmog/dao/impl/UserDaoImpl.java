@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.gothmog.dao.UserDao;
 import ru.gothmog.model.User;
 
-public class UserDaoImpl extends BasicDaoImpl<User> implements UserDao{
+public class UserDaoImpl extends BasicDaoImpl<User> implements UserDao {
 
     private final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
 
@@ -32,7 +32,7 @@ public class UserDaoImpl extends BasicDaoImpl<User> implements UserDao{
         User user = (User) getCurrentSession()
                 .createQuery("FROM User WHERE email = :email")
                 .setParameter("email", email).uniqueResult();
-        if(user == null)
+        if (user == null)
             logger.info("User with email {} not exist", email);
         else
             logger.info("User with email {} was extracted successfully. {}",

@@ -16,7 +16,7 @@ import ru.gothmog.service.UserService;
 import java.util.Set;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
     @Autowired
@@ -38,6 +38,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
+    public void updatePasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken updateToken = new PasswordResetToken(token, user);
+        passwordResetTokenDao.update(updateToken);
+    }
+
+    @Override
     public User findByUsername(String username) {
         return userDao.getByUsername(username);
     }
@@ -52,10 +59,10 @@ public class UserServiceImpl implements UserService{
     public User createUser(User user, Set<UserRole> userRoles) throws Exception {
         User localUser = userDao.getByUsername(user.getUsername());
 
-        if (localUser != null){
+        if (localUser != null) {
             LOG.info("user {*} already exists. Nothing will be done", user.getUsername());
         } else {
-            for (UserRole userRole : userRoles){
+            for (UserRole userRole : userRoles) {
                 roleDao.create(userRole.getRole());
             }
             user.getUserRoles().addAll(userRoles);
@@ -66,6 +73,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User save(User user) {
-        return userDao.create(user);
+        return userDao.saveOrUpdate(user);
+    }
+
+    @Override
+    public User update(User user) {
+        return userDao.update(user);
     }
 }

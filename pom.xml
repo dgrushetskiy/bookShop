@@ -89,7 +89,12 @@
             <artifactId>spring-security-taglibs</artifactId>
             <version>${spring.security.version}</version>
         </dependency>
-
+        <!-- Mail-->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
         <!--Postgresql-->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -191,7 +196,4 @@
             </plugin>
         </plugins>
     </build>
-
-
-
 </project>

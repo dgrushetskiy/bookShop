@@ -3,7 +3,6 @@ package ru.gothmog.config.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,13 +15,6 @@ import ru.gothmog.util.SecurityUtility;
 @EnableWebSecurity
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    private BCryptPasswordEncoder passwordEncoder(){
-        return SecurityUtility.passwordEncoder();
-    }
-
     private static final String[] PUBLIC_MATCHERS = {
             "/static/**",
             "/",
@@ -31,18 +23,25 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
             "/password/**",
             "/login"
     };
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    private BCryptPasswordEncoder passwordEncoder() {
+        return SecurityUtility.passwordEncoder();
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    /** In Memory
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("admin").password("apass").authorities("ROLE_ADMIN").and()
-                .withUser("user").password("upass").authorities("ROLE_USER");
-    }
+    /**
+     * In Memory
+     *
+     * @Override protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+     * auth.inMemoryAuthentication().withUser("admin").password("apass").authorities("ROLE_ADMIN").and()
+     * .withUser("user").password("upass").authorities("ROLE_USER");
+     * }
      */
 
     @Override
@@ -51,10 +50,10 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
         http
                 .csrf().disable().cors().disable()
-                .formLogin().loginPage("/login").defaultSuccessUrl("/welcome")
+                .formLogin().loginPage("/login").defaultSuccessUrl("/")
                 .failureUrl("/login?error")
-                .usernameParameter("user_login")
-                .passwordParameter("password_login")
+                .usernameParameter("username")
+                .passwordParameter("password")
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/?logout").deleteCookies("remember-me").permitAll()
@@ -62,19 +61,19 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe();
 
         /** 1 вариант
-        http.authorizeRequests().antMatchers(PUBLIC_MATCHERS).permitAll()
-                .anyRequest().authenticated();
+         http.authorizeRequests().antMatchers(PUBLIC_MATCHERS).permitAll()
+         .anyRequest().authenticated();
 
-        http.formLogin().and().httpBasic();
+         http.formLogin().and().httpBasic();
          */
         /** 2 вариант
-        http
-                .authorizeRequests()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .and()
-                .httpBasic();
+         http
+         .authorizeRequests()
+         .anyRequest().authenticated()
+         .and()
+         .formLogin()
+         .and()
+         .httpBasic();
          */
     }
 }

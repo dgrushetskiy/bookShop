@@ -32,7 +32,7 @@ public class AppConfig {
     private HibernateConfig hibernateConfig;
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         JdbcDaoImpl jdbcDao = new JdbcDaoImpl();
         jdbcDao.setDataSource(hibernateConfig.dataSource());
         jdbcDao.setUsersByUsernameQuery(environment.getRequiredProperty("usersByQuery"));
@@ -41,17 +41,17 @@ public class AppConfig {
     }
 
     @Bean
-    public UserDao userDao(){
+    public UserDao userDao() {
         return new UserDaoImpl(User.class);
     }
 
     @Bean
-    public RoleDao roleDao(){
+    public RoleDao roleDao() {
         return new RoleDaoImpl(Role.class);
     }
 
     @Bean
-    public PasswordResetTokenDao passwordResetTokenDao(){
+    public PasswordResetTokenDao passwordResetTokenDao() {
         return new PasswordResetTokenDaoImpl(PasswordResetToken.class);
     }
 }

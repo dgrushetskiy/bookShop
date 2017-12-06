@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Transactional
-public class BasicDaoImpl<T> implements BasicDao<T>{
+public class BasicDaoImpl<T> implements BasicDao<T> {
     private final Class<T> entityClass;
 
     @Autowired
@@ -56,6 +56,12 @@ public class BasicDaoImpl<T> implements BasicDao<T>{
     @Override
     public T update(T entity) {
         sessionFactory.getCurrentSession().update(entity);
+        return entity;
+    }
+
+    @Override
+    public T saveOrUpdate(T entity) {
+        sessionFactory.getCurrentSession().saveOrUpdate(entity);
         return entity;
     }
 }

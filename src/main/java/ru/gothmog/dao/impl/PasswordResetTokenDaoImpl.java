@@ -9,7 +9,7 @@ import ru.gothmog.model.security.PasswordResetToken;
 import java.util.Date;
 import java.util.stream.Stream;
 
-public class PasswordResetTokenDaoImpl extends BasicDaoImpl<PasswordResetToken> implements PasswordResetTokenDao{
+public class PasswordResetTokenDaoImpl extends BasicDaoImpl<PasswordResetToken> implements PasswordResetTokenDao {
 
     private final Logger logger = LoggerFactory.getLogger(PasswordResetTokenDaoImpl.class);
 
@@ -24,7 +24,7 @@ public class PasswordResetTokenDaoImpl extends BasicDaoImpl<PasswordResetToken> 
                 .setParameter("token", token)
                 .uniqueResult();
 
-        if (passwordResetToken == null){
+        if (passwordResetToken == null) {
             logger.info("PasswordResetToken witch token {} not exist", token);
         } else {
             logger.info("PasswordResetToken witch token {} was extracted successfully. {}", token, passwordResetToken);
@@ -36,10 +36,10 @@ public class PasswordResetTokenDaoImpl extends BasicDaoImpl<PasswordResetToken> 
     public PasswordResetToken getByUser(User user) {
         PasswordResetToken passwordResetToken = (PasswordResetToken) getCurrentSession()
                 .createQuery("FROM PasswordResetToken WHERE user = :user ORDER BY token DESC")
-                .setParameter("user",user)
+                .setParameter("user", user)
                 .uniqueResult();
 
-        if (passwordResetToken == null){
+        if (passwordResetToken == null) {
             logger.info("PasswordResetToken witch user {} not exist", user);
         } else {
             logger.info("PasswordResetToken witch user {} was extracted successfully. {}", user, passwordResetToken);
@@ -47,9 +47,26 @@ public class PasswordResetTokenDaoImpl extends BasicDaoImpl<PasswordResetToken> 
         return passwordResetToken;
     }
 
+    /**
+     * получить все по дате истечения срока действия
+     * @param now
+     * @return
+     */
     @Override
     public Stream<PasswordResetToken> getAllByExpireDateLessThan(Date now) {
-        return null;
+        PasswordResetToken passwordResetToken = (PasswordResetToken) getCurrentSession()
+                .createQuery("FROM PasswordResetToken WHERE expiryDate <= : now")
+                .setParameter("now", now)
+                .uniqueResult();
+
+        if (passwordResetToken == null){
+            logger.info("PasswordResetToken witch Date {} not ", now);
+        } else {
+            logger.info("PasswordResetToken witch Date {} was extracted successfully. {}", now, passwordResetToken);
+        }
+        Stream<PasswordResetToken> passwordResetTokenStream = Stream.of(passwordResetToken);
+        passwordResetTokenStream.filter(p->p.getExpiryDate()==now).forEach(p->p.getToken());
+        return passwordResetTokenStream;
     }
 
     @Override

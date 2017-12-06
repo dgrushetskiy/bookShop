@@ -7,22 +7,22 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Entity
-@Table(name = "password_reset_token")
+@Table(name = "passwordresettoken")
 public class PasswordResetToken {
 
     private static final int EXPIRATION = 60 * 24;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "password_reset_token_id")
+    @Column(name = "passwordresettoken_id")
     private Long id;
 
     @Column(name = "token")
     private String token;
 
     //@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @OneToOne( fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", unique = true)
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "user_id_fk"))
     private User user;
 
     private Date expiryDate;
@@ -85,9 +85,4 @@ public class PasswordResetToken {
         this.expiryDate = expiryDate;
     }
 
-    @Override
-    public String toString() {
-        return "PasswordResetToken [id=" + id + ", token=" + token + ", user=" + user + ", expiryDate=" + expiryDate
-                + "]";
-    }
 }

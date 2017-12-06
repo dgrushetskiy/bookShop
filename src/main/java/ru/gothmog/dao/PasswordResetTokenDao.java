@@ -6,7 +6,7 @@ import ru.gothmog.model.security.PasswordResetToken;
 import java.util.Date;
 import java.util.stream.Stream;
 
-public interface PasswordResetTokenDao extends BasicDao<PasswordResetToken>{
+public interface PasswordResetTokenDao extends BasicDao<PasswordResetToken> {
 
     PasswordResetToken getByToken(String token);
 
